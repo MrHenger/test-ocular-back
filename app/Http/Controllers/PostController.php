@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PostSaveRequest;
 use App\Models\Post;
 use Illuminate\Http\Request;
 
@@ -14,17 +15,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $post = Post::all();
     }
 
     /**
@@ -33,9 +24,15 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PostSaveRequest $request)
     {
-        //
+        // TODO: se requiere guardar el usuario authenticado y la imagen de la publicacion
+
+        $post = $request->all();
+
+        $post = Post::create($post);
+
+        return response($post, 201);
     }
 
     /**
@@ -46,18 +43,9 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
-    }
+        // $post = Post::findOrFail($id);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Post  $post
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Post $post)
-    {
-        //
+        return response($post);
     }
 
     /**
@@ -67,9 +55,17 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+    public function update(Request $request, $id)
     {
-        //
+        // TODO: Colocar la validacion de la request y guardar el usuario authenticado y la imagen de la publicacion
+
+        $newPost = $request->all();
+
+        $post = Post::findOrFail($id);
+
+        $post->update($newPost);
+
+        return response($post, 201);
     }
 
     /**
@@ -78,8 +74,10 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Post $post)
+    public function destroy($id)
     {
-        //
+        $post = Post::findOrFail($id);
+
+        $post->delete();
     }
 }
