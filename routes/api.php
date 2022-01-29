@@ -26,11 +26,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('logout', [LogoutController::class, 'logout']);
 
-    Route::resource('/category', CategoryController::class)->except('create', 'edit');
+    Route::resource('/admin/category', CategoryController::class)->except('create', 'edit');
 
-    Route::resource('/post', PostController::class)->except('create', 'edit', 'update');
+    Route::resource('/admin/post', PostController::class)->except('create', 'edit', 'update');
 
-    Route::post('/post/{post}', [PostController::class, 'update'])->name('post.update');
+    Route::post('/admin/post/{post}', [PostController::class, 'update'])->name('post.update');
 }); 
 
 // Route::resource('/category', CategoryController::class)->only('show', 'index');
