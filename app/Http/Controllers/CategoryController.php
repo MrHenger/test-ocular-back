@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
@@ -12,11 +13,15 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $categories = Category::all();
+        $categories = Category::select(['*']);
 
-        return response()->json($categories);
+        if($request->name) {
+            $categories->where('name', 'like', '%'.$request->name.'%');
+        }
+
+        return CategoryResource::collection($categories->orderBy('id', 'desc')->paginate(5));
     }
 
     /**
