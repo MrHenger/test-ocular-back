@@ -1,7 +1,8 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthMeController;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\AuthMeController;
+use App\Http\Controllers\Auth\LogoutController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,5 +21,7 @@ Route::post('login', [LoginController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('authme', [AuthMeController::class, 'authMe']);
+
+    Route::get('logout', [LogoutController::class, 'logout']);
 }); 
 
