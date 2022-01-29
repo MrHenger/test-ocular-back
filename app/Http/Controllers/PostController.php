@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PostSaveRequest;
+use App\Http\Resources\PostResource;
 use App\Models\Images;
 use App\Models\Post;
 use Illuminate\Http\Request;
@@ -15,9 +16,22 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $post = Post::all();
+        $post = Post::select(['*']);
+
+        if($request->category) { // Filter by category
+            $category = $request->category;
+            $post->whereHas('category', function ($query) use ($category) {
+                $query->where('id', $category);
+            });
+        }
+
+        if($request->title) { // Filter by title
+            $post->where('title', 'like', '%'.$request->title.'%');
+        }
+
+        return PostResource::collection($post->orderBy('id', 'desc')->paginate(5));
     }
 
     /**
