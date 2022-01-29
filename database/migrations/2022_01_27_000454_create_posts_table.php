@@ -19,6 +19,7 @@ class CreatePostsTable extends Migration
             $table->string('slug');
             $table->text('body');
             $table->boolean('enabled')->default(false);
+            $table->date('publicationDate')->nullable();
             $table->timestamps();
 
             // Foreign Keys
