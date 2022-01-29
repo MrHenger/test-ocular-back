@@ -107,17 +107,55 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Post $post)
     {
-        // TODO: Colocar la validacion de la request y guardar el usuario authenticado y la imagen de la publicacion
+        // ================= Validations ================
+            $validator = Validator::make($request->all(), [
+                'title' => 'required|string',
+                'slug' => 'required|string',
+                'body' => 'required|string',
+                'category_id' => 'required|string',
+            ]);
+
+            if($validator->fails()) {
+                return response()->json($validator->errors(), 422);
+            }
 
         $newPost = $request->all();
 
-        $post = Post::findOrFail($id);
+        // =============== Validate category ==============
+        $category = Category::find($newPost['category_id']);
+
+        if(!$category) { // Category not found
+            return response()->json(['error' => 'Categoria no encontrada'], 404);
+        } else {
+            if(!$category['enabled']) { // Disabled category
+                return response()->json(['error' => 'La categoria indicada no se encuentra habilitada'], 422);
+            }
+        }
+
+        // ============== Validate image ==================
+        if(isset($newPost['image'])) { // If update image
+            // ============ Create post image =============
+            if ($file = $request->file('image')) {
+                $name = $file->getClientOriginalName();
+                $file->move('images/miniatures', $name);
+    
+                $image = Images::create(['route' => $name]);
+    
+                $newPost['image_id'] = $image->id;
+
+                $oldImage = Images::find($post->image->id);
+            }
+        }
 
         $post->update($newPost);
 
-        return response($post, 201);
+        if(isset($oldImage)) {
+            $oldImage->delete();
+        }
+
+        return (new PostResource(Post::find($post->id)))->response()->setStatusCode(201);
     }
 
     /**
