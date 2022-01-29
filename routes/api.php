@@ -19,6 +19,6 @@ use Illuminate\Support\Facades\Route;
 Route::post('login', [LoginController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
-    
+    Route::get('authme', [AuthMeController::class, 'authMe']);
 }); 
 
