@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PostSaveRequest;
 use App\Http\Resources\PostResource;
+use App\Models\Category;
 use App\Models\Images;
 use App\Models\Post;
 use Illuminate\Http\Request;
@@ -42,7 +43,7 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        // Validations
+        // ================= Validations ================
         $validator = Validator::make($request->all(), [
             'title' => 'required|string',
             'slug' => 'required|string',
@@ -57,9 +58,21 @@ class PostController extends Controller
 
         $post = $validator->validated();
 
+        // =============== Validate category ==============
+        $category = Category::find($post['category_id']);
+
+        if(!$category) { // Category not found
+            return response()->json(['error' => 'Categoria no encontrada'], 404);
+        } else {
+            if(!$category['enabled']) { // Disabled category
+                return response()->json(['error' => 'La categoria indicada no se encuentra habilitada'], 422);
+            }
+        }
+        // ================================================
+
         $post['user_id'] = $request->user()->id;
 
-        // Create post image
+        // =============== Create post image ==============
         if ($archivo = $request->file('image')) {
             $nombre = $archivo->getClientOriginalName();
             $archivo->move('images/miniatures', $nombre);
@@ -71,7 +84,7 @@ class PostController extends Controller
 
         $post = Post::create($post);
 
-        return response($post, 201);
+        return (new PostResource($post))->response()->setStatusCode(201);
     }
 
     /**
