@@ -82,4 +82,24 @@ class CategoryController extends Controller
 
         return new CategoryResource($category);
     }
+
+    public function publicIndex(Request $request) {
+        $categories = Category::select(['*']);
+
+        if($request->name) {
+            $categories->where('name', 'like', '%'.$request->name.'%');
+        }
+
+        $categories->where('enabled', true);
+
+        return CategoryResource::collection($categories->orderBy('id', 'desc')->paginate(5));
+    }
+
+    public function publicShow(Category $category) {
+        if($category['enabled'] == false) {
+            return response()->json(['error' => 'No puede acceder a esta categoria'], 403);
+        }
+
+        return new CategoryResource($category);
+    } 
 }

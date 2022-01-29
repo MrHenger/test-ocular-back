@@ -38,3 +38,9 @@ Route::group(['prefix' => 'post'], function () {
     Route::get('/', [PostController::class, 'publicIndex'])->name('post.public.index');
     Route::get('/{post}', [PostController::class, 'publicShow'])->name('post.public.show');
 });
+
+// Public routes for category
+Route::group(['prefix' => 'category'], function () {
+    Route::get('/', [CategoryController::class, 'publicIndex'])->name('category.public.index');
+    Route::get('/{category}', [CategoryController::class, 'publicShow'])->name('category.public.show');
+});
