@@ -24,7 +24,7 @@ Route::post('login', [LoginController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('authme', [AuthMeController::class, 'authMe']);
 
-    Route::get('logout', [LogoutController::class, 'logout']);
+    Route::post('logout', [LogoutController::class, 'logout']);
 
     Route::resource('/category', CategoryController::class)->except('index', 'show','create', 'edit');
 
