@@ -164,10 +164,10 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Post $post)
     {
-        $post = Post::findOrFail($id);
-
         $post->delete();
+        (Images::find($post->image->id))->delete(); // Delete related image 
+        return (new PostResource($post))->response()->setStatusCode(200);
     }
 }
