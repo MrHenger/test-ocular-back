@@ -28,7 +28,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::resource('/category', CategoryController::class)->except('index', 'show','create', 'edit');
 
-    Route::resource('/post', PostController::class)->except('index', 'show','create', 'edit');
+    Route::resource('/post', PostController::class)->except('index', 'show','create', 'edit', 'update');
+
+    Route::post('/post/{post}', [PostController::class, 'update'])->name('post.update');
 }); 
 
 Route::resource('/category', CategoryController::class)->only('show', 'index');
