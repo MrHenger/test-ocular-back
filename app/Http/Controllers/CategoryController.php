@@ -40,7 +40,7 @@ class CategoryController extends Controller
 
         $category = Category::create($category);
 
-        return response($category, 201);
+        return (new CategoryResource($category))->response()->setStatusCode(201);
     }
 
     /**
@@ -49,11 +49,9 @@ class CategoryController extends Controller
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Category $category)
     {
-        $category = Category::findOrFail($id);
-
-        return response($category);
+        return new CategoryResource($category);
     }
 
     /**
@@ -63,15 +61,13 @@ class CategoryController extends Controller
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Category $category)
     {
         $newCategory = $request->all();
 
-        $category = Category::findOrFail($id);
-
         $category->update($newCategory);
 
-        return response($category, 201);
+        return (new CategoryResource(Category::find($category->id)))->response()->setStatusCode(201);
     }
 
     /**
@@ -80,12 +76,10 @@ class CategoryController extends Controller
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Category $category)
     {
-        $category = Category::findOrFail($id);
-
         $category->delete();
 
-        return response($category, 201);
+        return new CategoryResource($category);
     }
 }
