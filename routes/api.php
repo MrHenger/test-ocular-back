@@ -31,3 +31,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('/post', PostController::class)->except('index', 'show','create', 'edit');
 }); 
 
+Route::resource('/category', CategoryController::class)->only('show', 'index');
+
+Route::resource('/post', PostController::class)->only('show', 'index');
