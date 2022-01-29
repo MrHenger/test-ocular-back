@@ -170,4 +170,32 @@ class PostController extends Controller
         (Images::find($post->image->id))->delete(); // Delete related image 
         return (new PostResource($post))->response()->setStatusCode(200);
     }
+
+    // Funcion for public route index
+    public function publicIndex(Request $request) {
+        $post = Post::select(['*']);
+
+        if($request->category) { // Filter by category
+            $category = $request->category;
+            $post->whereHas('category', function ($query) use ($category) {
+                $query->where('id', $category);
+            });
+        }
+
+        if($request->title) { // Filter by title
+            $post->where('title', 'like', '%'.$request->title.'%');
+        }
+
+        $post->where('enabled', true);
+
+        return PostResource::collection($post->orderBy('id', 'desc')->paginate(5));
+    }
+
+    public function publicShow(Post $post) {
+        if($post['enabled'] == false) {
+            return response()->json(['error' => 'No puede acceder a esta publicacion'], 403);
+        }
+
+        return new PostResource($post);
+    }
 }

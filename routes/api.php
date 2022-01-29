@@ -33,6 +33,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/admin/post/{post}', [PostController::class, 'update'])->name('post.update');
 }); 
 
-// Route::resource('/category', CategoryController::class)->only('show', 'index');
-
-// Route::resource('/post', PostController::class)->only('show', 'index');
+// Public routes for post
+Route::group(['prefix' => 'post'], function () {
+    Route::get('/', [PostController::class, 'publicIndex'])->name('post.public.index');
+    Route::get('/{post}', [PostController::class, 'publicShow'])->name('post.public.show');
+});
