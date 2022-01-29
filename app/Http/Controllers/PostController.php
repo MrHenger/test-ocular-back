@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PostSaveRequest;
+use App\Models\Images;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class PostController extends Controller
 {
@@ -24,11 +26,34 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(PostSaveRequest $request)
+    public function store(Request $request)
     {
-        // TODO: se requiere guardar el usuario authenticado y la imagen de la publicacion
+        // Validations
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string',
+            'slug' => 'required|string',
+            'body' => 'required|string',
+            'category_id' => 'required|string',
+            'image' => 'required',
+        ]);
 
-        $post = $request->all();
+        if($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        $post = $validator->validated();
+
+        $post['user_id'] = $request->user()->id;
+
+        // Create post image
+        if ($archivo = $request->file('image')) {
+            $nombre = $archivo->getClientOriginalName();
+            $archivo->move('images/miniatures', $nombre);
+
+            $image = Images::create(['route' => $nombre]);
+
+            $post['image_id'] = $image->id;
+        }
 
         $post = Post::create($post);
 
