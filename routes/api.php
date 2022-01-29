@@ -22,6 +22,6 @@ Route::post('login', [LoginController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('authme', [AuthMeController::class, 'authMe']);
 
-    Route::get('logout', [LogoutController::class, 'logout']);
+    Route::post('logout', [LogoutController::class, 'logout']);
 }); 
 
