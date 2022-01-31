@@ -34,7 +34,7 @@ class LoginController extends Controller
         } else {
             return response()->json([
                 'message' => 'Las credenciales ingresadas no coinciden con nuestros registros'
-            ], 400);
+            ], 422);
         }
     }
 }
