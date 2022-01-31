@@ -199,7 +199,7 @@ class PostController extends Controller
 
         $post->where('enabled', true);
 
-        return PostResource::collection($post->orderBy('id', 'desc')->paginate(5));
+        return PostResource::collection($post->orderBy('id', 'desc')->paginate(6));
     }
 
     public function publicShow(Post $post) {
