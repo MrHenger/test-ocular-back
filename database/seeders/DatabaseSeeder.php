@@ -15,7 +15,8 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // \App\Models\User::factory(10)->create();
-        Images::create(['route' => 'anonymousUser.jgp']);
+        Images::create(['route' => 'anonymousUser.jpg']);
         $this->call(AdminSeeder::class);
+        $this->call(CategorySeeder::class);
     }
 }
