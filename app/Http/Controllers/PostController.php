@@ -7,6 +7,7 @@ use App\Http\Resources\PostResource;
 use App\Models\Category;
 use App\Models\Images;
 use App\Models\Post;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -114,6 +115,7 @@ class PostController extends Controller
                 'title' => 'required|string',
                 'slug' => 'required|string',
                 'body' => 'required|string',
+                'enabled' => 'required|boolean',
                 'category_id' => 'required|int',
             ]);
 
@@ -147,6 +149,12 @@ class PostController extends Controller
 
                 $oldImage = Images::find($post->image->id);
             }
+        }
+
+        // ============= Set publication Date =============
+        if(!isset($post['publicationDate']) && $newPost['enabled'] == true) {
+            $newPost['publicationDate'] = Carbon::today();
+            //return response()->json(["data1" => $newPost, "data2" => $post]);
         }
 
         $post->update($newPost);
