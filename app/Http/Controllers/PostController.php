@@ -48,7 +48,7 @@ class PostController extends Controller
             'title' => 'required|string',
             'slug' => 'required|string',
             'body' => 'required|string',
-            'category_id' => 'required|string',
+            'category_id' => 'required|int',
             'image' => 'required',
         ]);
 
@@ -114,7 +114,7 @@ class PostController extends Controller
                 'title' => 'required|string',
                 'slug' => 'required|string',
                 'body' => 'required|string',
-                'category_id' => 'required|string',
+                'category_id' => 'required|int',
             ]);
 
             if($validator->fails()) {

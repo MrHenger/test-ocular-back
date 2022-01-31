@@ -18,6 +18,7 @@ class AdminSeeder extends Seeder
             'name' => 'admin',
             'email' => 'test@email.com',
             'password' => bcrypt('1234'),
+            'mainPicture_id' => '1',
         ]);
     }
 }
