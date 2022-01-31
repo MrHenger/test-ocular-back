@@ -115,7 +115,7 @@ class PostController extends Controller
                 'title' => 'required|string',
                 'slug' => 'required|string',
                 'body' => 'required|string',
-                'enabled' => 'required|boolean',
+                'enabled' => 'required|string',
                 'category_id' => 'required|int',
             ]);
 
@@ -156,6 +156,9 @@ class PostController extends Controller
             $newPost['publicationDate'] = Carbon::today();
             //return response()->json(["data1" => $newPost, "data2" => $post]);
         }
+
+        if($newPost['enabled'] == 'true') $newPost['enabled'] = true;
+        else $newPost['enabled'] = false;
 
         $post->update($newPost);
 
